@@ -17,11 +17,17 @@ const Label = styled.label`
   font-weight: 500;
 `;
 
+const Error = styled.span`
+  font-size: 1.4rem;
+  color: var(--color-red-700);
+`;
+
 // Receives closeModal directly from Modal
 function CreateCabinForm({ cabinToEdit, closeModal }) {
-  const { register, handleSubmit, reset } = useForm();
+  const { register, handleSubmit, reset, getValues, formState } = useForm();
   const queryClient = useQueryClient();
 
+  const { errors } = formState;
   const { mutate, isLoading: isCreating } = useMutation({
     mutationFn: createCabin,
     onSuccess: () => {
@@ -33,23 +39,52 @@ function CreateCabinForm({ cabinToEdit, closeModal }) {
   });
 
   function onSubmit(data) {
-    mutate(data);
+    console.log(data);
+    mutate({ ...data, image: data.image[0] });
   }
+
+  function onError(errors) {
+    console.log(errors);
+  }
+
   return (
-    <Form onSubmit={handleSubmit(onSubmit)}>
+    <Form onSubmit={handleSubmit(onSubmit, onError)}>
       <FormRow>
         <Label htmlFor="name">Cabin Name</Label>
-        <Input type="number" id="name" {...register("name")} />
+        <Input
+          type="number"
+          id="name"
+          {...register("name", {
+            required: "This Fied  is required",
+          })}
+        />
+        {errors?.name?.message && <Error>{errors.name.message}</Error>}
       </FormRow>
 
       <FormRow>
         <Label htmlFor="name">Cabin Capacity</Label>
-        <Input type="number" id="maxCapacity" {...register("maxCapacity")} />
+        <Input
+          type="number"
+          id="maxCapacity"
+          {...register("maxCapacity", {
+            required: "This Fied  is required",
+            min: {
+              value: 1,
+              message: "Capacity should be minimum 1",
+            },
+          })}
+        />
       </FormRow>
 
       <FormRow>
         <Label htmlFor="price">Cabin Price</Label>
-        <Input type="number" id="regularPrice" {...register("regularPrice")} />
+        <Input
+          type="number"
+          id="regularPrice"
+          {...register("regularPrice", {
+            required: "This Fied  is required",
+          })}
+        />
       </FormRow>
 
       <FormRow>
@@ -58,7 +93,12 @@ function CreateCabinForm({ cabinToEdit, closeModal }) {
           type="number"
           id="discount"
           defaultValue={0}
-          {...register("discount")}
+          {...register("discount", {
+            required: "This field is required",
+            validate: (value) =>
+              value <= getValues().regularPrice ||
+              "Discount should be less than regularprice",
+          })}
         />
       </FormRow>
 
@@ -67,13 +107,22 @@ function CreateCabinForm({ cabinToEdit, closeModal }) {
         <Textarea
           id="description"
           defaultValue=""
-          {...register("description")}
+          {...register("description", {
+            required: "This Fied  is required",
+          })}
         />
       </FormRow>
 
       <FormRow>
         <Label htmlFor="image">image</Label>
-        <FileInput id="image" accept="image/*" />
+        <FileInput
+          type="file"
+          id="image"
+          accept="image/*"
+          {...register("image", {
+            required: "This Fied  is required",
+          })}
+        />
       </FormRow>
 
       <FormRow>
