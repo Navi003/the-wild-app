@@ -5,13 +5,14 @@ import Row from "../ui/Row";
 import Button from "../ui/Button";
 import CreateCabinForm from "../features/cabins/CreateCabinForm";
 import AddCabin from "../features/cabins/AddCabin";
+import CabinTableOpration from "../features/cabins/CabinTableOpration";
 
 function Cabins() {
   return (
     <>
       <Row type="horizontal">
         <Heading as="h1">All cabins</Heading>
-        <p>Filter / Sort</p>
+        <CabinTableOpration />
       </Row>
 
       <Row>
