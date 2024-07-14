@@ -33,7 +33,6 @@ const TableHeader = styled.header`
 
 function CabinTable() {
   const { isLoading, cabins } = useCabins();
-  const [searchParams] = useSearchParams();
 
   if (isLoading) return <Spinner />;
 
@@ -46,6 +45,10 @@ function CabinTable() {
     filteredCabins = cabins.filter((cabin) => cabin.discount === 0);
   if (filterValue === "with-discount")
     filteredCabins = cabins.filter((cabin) => cabin.discount > 0);
+
+  //2 Sort
+
+  const sortBy = searchParams.get("sortBy ");
 
   return (
     <Menus>
