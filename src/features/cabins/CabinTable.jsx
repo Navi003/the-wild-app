@@ -34,6 +34,7 @@ const TableHeader = styled.header`
 function CabinTable() {
   const { isLoading, cabins } = useCabins();
 
+  const [searchParams] = useSearchParams();
   if (isLoading) return <Spinner />;
 
   const filterValue = searchParams.get("discount") || "all";
@@ -48,7 +49,13 @@ function CabinTable() {
 
   //2 Sort
 
-  const sortBy = searchParams.get("sortBy ");
+  const sortBy = searchParams.get("sortBy");
+  // console.log(sortBy);
+  const [field, direction] = sortBy.split("-");
+  const modifier = direction === "asc" ? 1 : -1;
+  const sortedCabin = filteredCabins.sort(
+    (a, b) => (a[field] - b[field]) * modifier
+  );
 
   return (
     <Menus>
@@ -62,7 +69,7 @@ function CabinTable() {
           <div></div>
         </Table.Header>
         <Table.Body
-          data={filteredCabins}
+          data={sortedCabin}
           render={(cabin) => <CabinRow cabin={cabin} key={cabin.id} />}
         />
       </Table>
