@@ -81,7 +81,7 @@ function Pagination({ count }) {
     setSearchParams(searchParams);
   }
 
-  if (pageCount <= 1) return null;
+  // if (pageCount <= 1) return null;
 
   return (
     <StyledPagination>
