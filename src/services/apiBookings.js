@@ -5,7 +5,10 @@ import { PAGE_SIZE } from "../utils/constants";
 export async function getBookings({ filter, sortBy, page }) {
   let query = supabase
     .from("bookings")
-    .select("*, cabins(name), guests(fullName, email)", { count: "exact" });
+    .select(
+      "id, created_at, startDate, endDate, numNIght, numGuests, status, totalPrice, cabins(name), guests(fullName, email)",
+      { count: "exact" }
+    );
 
   // FILTER
   if (filter) query = query[filter.method || "eq"](filter.field, filter.value);
